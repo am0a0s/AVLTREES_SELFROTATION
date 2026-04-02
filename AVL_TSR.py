@@ -35,12 +35,12 @@ def calculateHeightBF(center_value, left_node, right_node):
     return calculateHeightBF
 
 #should return -1 for null, 0 for leaf, and the height of the tree for non-leaf nodes
-def calcHeight(center_value, left_node, right_node):
-    if center_value is None:
+def calcHeight(node):
+    if node is None:
         return -1
-    if left_node is None and right_node is None:
-        return 0
-    return calcHeight
+    left_height = calcHeight(node.left_node)
+    right_height = calcHeight(node.right_node)
+    return 1 + max(left_height, right_height)
 
 #subtract the left height to the right height
 def calcBF(calcHeight):
@@ -52,6 +52,13 @@ def rotate(center_value, left_node, right_node):
     #perform rotations here
 
  #def insert(value):
+
+
+ class NodeClass:
+    def __init__(self, center_value, left_node = None , right_node = None):
+        self.center_value = center_value
+        self.left_node = left_node
+        self.right_node = right_node
 
 #if __name__ == "__main__":
     main()
