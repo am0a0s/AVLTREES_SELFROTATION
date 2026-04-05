@@ -1,38 +1,15 @@
+class NodeClass:
+    def __init__(self, center_value, left_node = None , right_node = None):
+        self.center_value = center_value
+        self.left_node = left_node
+        self.right_node = right_node
+
 def main():
+    node = NodeClass(10)
+    node.right_node = NodeClass(20,None,NodeClass(30))
 
-    print("AVL Trees & Rotations inspired Self-Balancing Recursive Structure in Python")
-
-    collection = []
-   
-    #rough visualization of what i would want to happen, is this pseudocode?
-    numVal = int(input("Enter the number of values you will input: "))
-
-    for x in range(numVal):
-        number = int(input("Enter Number: "))
-        collection.append(number)
-        node(number)
-
-
-        print("Currently in the collection:", collection)
-
-#supposedly the node 
-def node(value): #would it be better to handle the value indivudally then the main function? or is this fine?
-    center_value = None
-    left_node = None
-    right_node = None
-    
-    if value > center_value:
-        right_node = value
-    else:
-        left_node = value
-
-    rotate(center_value, left_node, right_node)
-
-#must be the complete calculation for height and bf
-def calculateHeightBF(center_value, left_node, right_node):
-    calcHeight(center_value, left_node, right_node)
-    calcBF(center_value, left_node, right_node)
-    return calculateHeightBF
+    print("Height of the tree:", calcHeight(node))
+    print("Balance Factor of the tree:", calcBF(node))
 
 #should return -1 for null, 0 for leaf, and the height of the tree for non-leaf nodes
 def calcHeight(node):
@@ -43,22 +20,80 @@ def calcHeight(node):
     return 1 + max(left_height, right_height)
 
 #subtract the left height to the right height
-def calcBF(calcHeight):
-    pass
-    balance_factor = 0
+def calcBF(node):
+    left_height = calcHeight(node.left_node)
+    right_height = calcHeight(node.right_node)
+    return left_height - right_height
 
-def rotate(center_value, left_node, right_node):
-    calculateHeightBF(center_value, left_node, right_node)
-    #perform rotations here
+def rotateRight(node):
+    new_root = node.left_node
+    node.left_node = new_root.right_node
+    new_root.right_node = node
+    return new_root
 
- #def insert(value):
+def rotateLeft(node):
+    new_root = node.right_node
+    node.right_node = new_root.left_node
+    new_root.left_node = node
+    return new_root
 
+def rotateRightLeft(node):
+    node.right_node = rotateRight(node.right_node)
+    return rotateLeft(node)
 
- class NodeClass:
-    def __init__(self, center_value, left_node = None , right_node = None):
-        self.center_value = center_value
-        self.left_node = left_node
-        self.right_node = right_node
+def rotateLeftRight(node):
+    node.left_node = rotateLeft(node.left_node)
+    return rotateRight(node)
 
-#if __name__ == "__main__":
+def balance(node):
+    bf = calcBF(node)
+    
+    if bf >= 2:  # left heavy
+        if calcBF(node.left_node) < 0:  # zig-zag
+            return rotateLeftRight(node)
+        return rotateRight(node)
+    
+    if bf <= -2:  # right heavy
+        if calcBF(node.right_node) > 0:  # zig-zag
+            return rotateRightLeft(node)
+        return rotateLeft(node)
+    
+    return node  # no rebalancing needed
+
+def insert(node, value):
+    if node is None:
+        return NodeClass(value)
+    
+    if value < node.center_value:
+        node.left_node = insert(node.left_node, value)
+    else:
+        node.right_node = insert(node.right_node, value)
+    
+    return balance(node)
+
+def searchVal(node, value):
+    if node is None:
+        return False
+    if node.center_value == value:
+        return True
+    elif node.center_value > value:
+        return searchVal(node.left_node, value)
+    else:
+        return searchVal(node.right_node, value)
+
+def findLowest(node):
+    thisNode = node
+    if thisNode.left_node is not None:
+        thisNode = thisNode.left_node
+        return findLowest(thisNode)
+    return thisNode
+
+def findHighest(node):
+    thisNode = node
+    if thisNode.right_node is not None:
+        thisNode = thisNode.right_node
+        return findHighest(thisNode)
+    return thisNode
+
+if __name__ == "__main__":
     main()
