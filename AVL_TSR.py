@@ -20,6 +20,7 @@ def main(): #where everything is executed
 
     NumberSearch(rootNode)
     LowestAndHighest(rootNode)
+    print("=====================END=====================")
 
 #recrsively calculates the height of each node and returns the maximum height of the tree
 def calcHeight(node):
@@ -62,15 +63,20 @@ def rotateLeftRight(node):
 #where the balancing happens, it checks the balance factor of the node and decides which rotation to perform based on the balance factor and the structure of the tree
 def balance(node):
     bf = calcBF(node)
-    
+    print(f"\nChecking balance at node {node.center_value}: BF = {bf}")
+
     if bf >= 2:  # left side heavy
         if calcBF(node.left_node) < 0:  # zig-zag
+            print(f"\nLeft-Right rotation at node {node.center_value}")
             return rotateLeftRight(node)
+        print(f"\nRight rotation at node {node.center_value}")
         return rotateRight(node) #not zig-zag, just left side heavy
     
     if bf <= -2:  # right side heavy
         if calcBF(node.right_node) > 0:  # zig-zag
+            print(f"\nRight-Left rotation at node {node.center_value}")
             return rotateRightLeft(node)
+        print(f"\nLeft rotation at node {node.center_value}")
         return rotateLeft(node) #not zig-zag, just right side heavy
     
     return node  # no rebalancing needed
@@ -119,21 +125,21 @@ def DispCVHTBF(rootNode):
     print("\nCurrent Center Value:", rootNode.center_value)
     print("Height of the tree:", calcHeight(rootNode))
     print("Balance Factor of the tree:", calcBF(rootNode))
-    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
 #display the lowest and highest values in the tree after all insertions are done
 def LowestAndHighest(rootNode):
-    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     print(">>Lowest Number<<")
     print("Lowest value in the tree:", findLowest(rootNode).center_value)
-    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     print(">>Highest Number<<")
     print("Highest value in the tree:", findHighest(rootNode).center_value)
-    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
 #searches for the user inputed value and displays whether it was found in the tree or not
 def NumberSearch(rootNode):
-    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     print(">>Search a Number<<")
     numSearch = int(input("Enter a value to search: "))
     if searchVal(rootNode, numSearch):
